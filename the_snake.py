@@ -16,14 +16,16 @@ LEFT = (-1, 0)
 RIGHT = (1, 0)
 
 # Константный словарь направлений
-DIRECTIONS = {(pygame.K_UP, LEFT): UP,
-              (pygame.K_UP, RIGHT): UP,
-              (pygame.K_DOWN, LEFT): DOWN,
-              (pygame.K_DOWN, RIGHT): DOWN,
-              (pygame.K_LEFT, UP): LEFT,
-              (pygame.K_LEFT, DOWN): LEFT,
-              (pygame.K_RIGHT, UP): RIGHT,
-              (pygame.K_RIGHT, DOWN): RIGHT}
+DIRECTIONS = {
+    (pygame.K_UP, LEFT): UP,
+    (pygame.K_UP, RIGHT): UP,
+    (pygame.K_DOWN, LEFT): DOWN,
+    (pygame.K_DOWN, RIGHT): DOWN,
+    (pygame.K_LEFT, UP): LEFT,
+    (pygame.K_LEFT, DOWN): LEFT,
+    (pygame.K_RIGHT, UP): RIGHT,
+    (pygame.K_RIGHT, DOWN): RIGHT,
+}
 
 # Цвет фона - черный:
 BOARD_BACKGROUND_COLOR = (0, 0, 0)
@@ -44,7 +46,7 @@ SPEED = 10
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), 0, 32)
 
 # Заголовок окна игрового поля:
-pygame.display.set_caption('Змейка')
+pygame.display.set_caption("Змейка")
 
 # Настройка времени:
 clock = pygame.time.Clock()
@@ -53,7 +55,10 @@ clock = pygame.time.Clock()
 # Тут опишите все классы игры.
 class GameObject:
     """Родительский класс, базовый класс"""
-    def __init__(self, position_val=None, body_color_val=BOARD_BACKGROUND_COLOR) -> None:
+
+    def __init__(
+        self, position_val=None, body_color_val=BOARD_BACKGROUND_COLOR
+    ) -> None:
         """Метод инициализации игрового объекта"""
         if position_val is None:
             self.position = SCREEN_CENTER
@@ -68,6 +73,7 @@ class GameObject:
 
 class Apple(GameObject):
     """Класс яблока"""
+
     def __init__(self, body_color_val=APPLE_COLOR):
         """Метод инициализации объекта класса яблоко"""
         super().__init__(position_val=None, body_color_val=body_color_val)
@@ -75,7 +81,10 @@ class Apple(GameObject):
 
     def randomize_position(self):
         """Метод рандомизации положения яблока"""
-        self.position = (randint(0, GRID_WIDTH - 1) * GRID_SIZE, randint(0, GRID_HEIGHT - 1) * GRID_SIZE)
+        self.position = (
+            randint(0, GRID_WIDTH - 1) * GRID_SIZE,
+            randint(0, GRID_HEIGHT - 1) * GRID_SIZE,
+        )
 
     def draw(self):
         """Метод отрисовки яблока"""
@@ -86,6 +95,7 @@ class Apple(GameObject):
 
 class Snake(GameObject):
     """Класс змейки"""
+
     def __init__(self, body_color_val=SNAKE_COLOR):
         """Метод инициализации объекта класса змейка"""
         super().__init__(position_val=None, body_color_val=body_color_val)
@@ -99,7 +109,7 @@ class Snake(GameObject):
         """Метод отрисовки змейки"""
         # Отрисовка сегментов змейки
         for position in self.positions[1:]:
-            rect = (pygame.Rect(position, (GRID_SIZE, GRID_SIZE)))
+            rect = pygame.Rect(position, (GRID_SIZE, GRID_SIZE))
             pygame.draw.rect(screen, self.body_color, rect)
             pygame.draw.rect(screen, BORDER_COLOR, rect, 1)
         # Отрисовка головы змейки
@@ -124,8 +134,10 @@ class Snake(GameObject):
     def move(self):
         """Метод обработки изменения позиции головы змейки"""
         head_position = self.get_head_position()
-        new_head_position = ((head_position[0] + self.direction[0] * GRID_SIZE) % SCREEN_WIDTH,
-                             (head_position[1] + self.direction[1] * GRID_SIZE) % SCREEN_HEIGHT)
+        new_head_position = (
+            (head_position[0] + self.direction[0] * GRID_SIZE) % SCREEN_WIDTH,
+            (head_position[1] + self.direction[1] * GRID_SIZE) % SCREEN_HEIGHT,
+        )
         self.position = new_head_position
         self.positions.insert(0, new_head_position)
 
@@ -143,7 +155,9 @@ def handle_keys(game_object):
             pygame.quit()
             raise SystemExit
         elif event.type == pygame.KEYDOWN:
-            game_object.next_direction = DIRECTIONS.get((event.key, game_object.direction), game_object.direction)
+            game_object.next_direction = DIRECTIONS.get(
+                (event.key, game_object.direction), game_object.direction
+            )
             if event.key == pygame.K_ESCAPE:
                 pygame.quit()
                 raise SystemExit
@@ -182,7 +196,7 @@ def main():
         pygame.display.update()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     """Запуск программы"""
     main()
 
